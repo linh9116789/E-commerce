@@ -49,5 +49,26 @@
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/pages/dashboard.js"></script>
+<!-- Admin Ckeditor-->
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<script>
+  CKEDITOR.replace( 'editor1');
+</script>
+<!-- Admin load thumbail before load image-->
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#blah').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+
+    }
+    $("#imgInp").change(function(){
+    readURL(this);
+    });
+</script>
 </body>
 </html>

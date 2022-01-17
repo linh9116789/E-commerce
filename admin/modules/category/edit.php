@@ -1,32 +1,35 @@
 <?php
 if (!defined('_INCODE')) die('Access Deined...');
 /**
- * File này chứa chức năng thêm danh mục
+ * File này chứa chức năng sửa danh mục 
  */
+//Xử lý lấy id trên url danh mục 
+if (isset($_GET['id'])){
+    $id = $_GET['id'];
+    $queryCategory = firstRaw("SELECT c_name FROM categories WHERE id='$id'");
+}
 
-//Xử lý thêm danh mục
+//Xử lý update 
 if (isPost()){
     $body = getBody();
     if (!empty($body['c_name'])){
         $c_name = $body['c_name'];
         $date = date('Y-m-d H:i:s');
-        $dataInsert = [
+        $dataUpdate = [
             'c_name' => $c_name,
-            'created_at'=>$date
+            'updated_at'=>$date
         ];
 
-        $insertStatus = insert('categories', $dataInsert);
+        $updateStatus = update('categories', $dataUpdate, 'id = '.$id.'');
 
-        if ($insertStatus){
+        if ($updateStatus){
             redirect('?module=category&action=list');
         }
-    }else{
-        echo "Không được để trống";
     }
 }
 
 $data = [
-    'pageTitle' => 'Thêm danh mục'
+    'pageTitle' => 'Sửa danh mục'
 ];
 layout('header','admin', $data);
 layout('sidebar','admin', $data);
@@ -37,10 +40,10 @@ layout('breadcrumb','admin', $data);
     <div class="container-fluid">
         <form action="" method="POST">
             <div class="form-group">
-                <label for="">Tên danh mục</label>
-                <input type="text" class="form-control" name="c_name" id="" placeholder="Tên danh mục">
+                <label for="">Tên danh mục </label>
+                <input type="text" class="form-control" name="c_name" value="<?php echo $queryCategory['c_name']; ?>" placeholder="Tên danh mục">
             </div>
-            <button type="submit" class="btn btn-primary">Thêm mới</button>
+            <button type="submit" class="btn btn-primary">Sửa</button>
         </form>
     </div><!-- /.container-fluid -->
 </section>

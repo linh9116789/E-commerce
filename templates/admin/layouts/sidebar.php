@@ -39,6 +39,7 @@
               </p>
             </a>
           </li>
+          <!--Categories -->
           <li class="nav-item <?php echo activeMenuSidebar('category')?'menu-open':false; ?> ">
             <a href="#" class="nav-link <?php echo activeMenuSidebar('category')?'active':false; ?>">
               <i class="nav-icon fas fa-copy"></i>
@@ -48,20 +49,46 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=category'; ?>" class="nav-link">
+              <li class="nav-item <?php echo activeMenuSidebar('list')?'active':false; ?>">
+                <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=category&action=list'; ?>" class="nav-link <?php echo activeMenuSidebar('list')?'active':false;?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=category&action=add'; ?>" class="nav-link">
+              <li class="nav-item <?php echo activeMenuSidebar('add')?'active':false; ?>">
+                <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=category&action=add'; ?>" class="nav-link <?php echo activeMenuSidebar('add')?'active':false; ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Thêm mới</p>
                 </a>
               </li>
             </ul>
           </li>
+          <!--End Categories -->
+          <!--Products -->
+          <li class="nav-item <?php echo activeMenuSidebar('product')?'menu-open':false; ?> ">
+            <a href="#" class="nav-link <?php echo activeMenuSidebar('product')?'active':false; ?>">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Quản lý sản phẩm
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=product&action=list'; ?>" class="nav-link <?php echo activeMenuSidebar('list')?'active':false;?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Danh sách sản phẩm</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=product&action=add'; ?>" class="nav-link <?php echo activeMenuSidebar('add')?'active':false; ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Thêm mới sản phẩm</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!--End Products -->
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

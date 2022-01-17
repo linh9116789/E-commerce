@@ -13,7 +13,7 @@ const  _INCODE = TRUE; //Ngăn chặn hành vi truy cập trực tiếp vào fil
 
 //thiết lập host
 define('_WEB_HOST_ROOT','http://'.$_SERVER['HTTP_HOST']
-.'/frontend'); //Địa chỉ trang chủ
+.'/ecommerce'); //Địa chỉ trang chủ
 
 define('_WEB_HOST_TEMPLATE', _WEB_HOST_ROOT.'/templates/client');
 
@@ -29,7 +29,7 @@ define('_WEB_PATH_TEMPLATE', _WEB_PATH_ROOT.'/templates');
 const _HOST = 'localhost';
 const _USER = 'root';
 const _PASS = '';
-const _DB = 'localhost';
+const _DB = 'ecommerce';
 const _DRIVER = 'mysql';
 
 //Thiết lập số lượng bản ghi hiển thị trên 1 trang 

@@ -1,7 +1,7 @@
 <?php
 
 $data = [
-    'pageTitle' => 'Quản lý danh mục'
+    'pageTitle' => 'Danh sách sản phẩm'
 ];
 layout('header','admin', $data);
 layout('sidebar','admin', $data);
@@ -14,28 +14,31 @@ layout('breadcrumb','admin', $data);
             <thead>
                 <tr>
                     <th with="5%">STT</th>
-                    <th>Tên danh mục</th>
-                    <th>Thời gian tạo</th>
-                    <th>Thời gian sửa</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Hình ảnh</th>
+                    <th>Giá sản phẩm</th>
+                    <th>Số lượng sản phẩm</th>
+                    <th>Thể loại</th>
+                    <th>Sản phẩm HOT</th>
                     <th with="5%">Sửa</th>
                     <th with="5%">Xóa</th>
                 </tr>
                 <tbody>
-                <?php
+                <!-- <?php
                 $i= 1;
                 $query = getRaw("SELECT * FROM categories");
                 if (is_array($query)):
                 foreach($query as $value):
-                ?>
+                ?> -->
                 <tr>
-                    <td><?php echo $i++; ?></td>
+                    <!-- <td><?php echo $i++; ?></td>
                     <td><?php echo $value['c_name'];?></td>
                     <td><?php echo $value['created_at'];?></td>
                     <td><?php echo $value['updated_at'];?></td>
                     <td><a href="?module=category&action=edit&id=<?php echo $value['id'];?>" class="btn btn-primary">Sửa</a></td>
-                    <td><a href="?module=category&action=delete&id=<?php echo $value['id'];?>" class="btn btn-danger">Xóa</a></td>
+                    <td><a href="?module=category&action=delete&id=<?php echo $value['id'];?>" class="btn btn-danger">Xóa</a></td> -->
                 </tr>
-                <?php endforeach; endif;?>
+                <!-- <?php endforeach; endif;?> -->
                 </tbody>
             </thead>
         </table>
