@@ -70,12 +70,6 @@ function getBody(){
     return $bodyArr;
 }
 
-//Kiểm tra email
-function isEmail($email){
-    $checkEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
-    return $checkEmail;
-}
-
 //Hàm print_r dữ liệu dạng mảng
 function dd($data){
     echo '<pre>';
@@ -118,4 +112,100 @@ function isNumberInt($number, $range=[]){
 
     return $checkNumber;
 
+}
+
+
+//Hàm tạo thông báo
+function getMsg($msg, $type='success'){
+    if (!empty($msg)){
+    echo '<div class="alert alert-'.$type.'">';
+    echo $msg;
+    echo '</div>';
+    }
+}
+
+//Hàm thông báo lỗi
+function form_error($fieldName, $errors, $beforeHtml='', $afterHtml=''){
+    return (!empty($errors[$fieldName]))?$beforeHtml.reset($errors[$fieldName]).$afterHtml:null;
+}
+
+/** Hàm upload file
+ * @param $file [tên file trùng tên input]
+ * @param array $extend [ định dạng file có thể upload được]
+ * @return array|int [ tham số trả về là 1 mảng - nếu lỗi trả về int ]
+ */
+function upload_image($file, $folder = '', array $extend = array())
+{
+    if (!empty($folder)){
+        $folder = '/'.$folder;
+    }
+
+    $code = 1;
+    // lấy đường dẫn ảnh
+    $baseFilename = $_FILES[$file]['name'];
+
+    // thông tin file 
+    $info = new SplFileInfo($baseFilename);
+
+    // lấy đuôi mở rộng của file
+    //C1:
+    $ext = strtolower($info->getExtension());
+    //C2:
+    // $ext = strtolower(pathinfo($info->getFilename(), PATHINFO_EXTENSION));
+
+    // Kiểm tra định dạng đuôi
+    if (!$extend){
+        $extend = ['png', 'jpg', 'jpeg'];
+    }
+
+    if (!in_array($ext, $extend)){
+        return $data['code'] = 0;
+    }
+
+    // Tên file mới
+    $nameFile = trim(str_replace('.' . $ext, '', strtolower($info->getFilename())));
+    $filename = date('Y-m-d__') . $nameFile . '.' . $ext;;
+
+    // Thư mục gốc để uploads
+    $path =  _WEB_PATH_TEMPLATE . $folder.'/' . 'uploads/' . date('Y/m/d/');
+    
+    if ($folder)
+        $path = _WEB_PATH_TEMPLATE . $folder . '/' . 'uploads/' . date('Y/m/d/');
+
+    if (!file_exists($path)){
+        mkdir($path, 0777, true);
+    }
+
+    // Di chuyển file vào thư mục uploads
+    move_uploaded_file($_FILES[$file]['tmp_name'], $path . $filename);
+
+    $data = [
+        'name'     => $filename,
+        'code'     => $code,
+        'path'     => $path,
+        'path_img' => 'uploads/' . $filename
+    ];
+
+    return $data;
+}
+
+/**
+ * @param $image [tên file trùng tên input]
+ * @param array $extend [ định dạng file có thể upload được]
+ * @return array|int [ tham số trả về là 1 mảng - nếu lỗi trả về int ]
+ */
+function pare_url_file($image, $folder = '')
+{
+    if (!empty($folder)){
+        $folder = '/'.$folder;
+    }
+    if (!$image) {
+        return '/ecommerce/templates' . $folder . '/assets/img/no-image.jpg';
+    }
+    $explode = explode('__', $image);
+
+    if (isset($explode[0])) {
+        $time = str_replace('_', '/', $explode[0]);
+        return '/ecommerce/templates' . $folder . '/uploads' . '/' . date('Y/m/d', strtotime($time)) . '/' . $image;
+    }
 }

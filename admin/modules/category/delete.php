@@ -10,8 +10,10 @@ if (isGet()){
     if (!empty(trim($body['id']))){
         $id = $body['id'];
         
-        $query = delete('categories','id = '.$id.'');
-        if ($query){
+        $queryCategory = delete('categories','id = '.$id.'');
+        if ($queryCategory){
+            setFlashData('msg','Xóa danh mục thành công!');
+            setFlashData('msg_type', 'success');
             redirect('?module=category&action=list');
         }
     }else {

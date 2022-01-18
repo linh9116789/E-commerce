@@ -52,13 +52,13 @@
               <li class="nav-item <?php echo activeMenuSidebar('list')?'active':false; ?>">
                 <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=category&action=list'; ?>" class="nav-link <?php echo activeMenuSidebar('list')?'active':false;?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Danh sách</p>
+                  <p>Danh sách danh mục</p>
                 </a>
               </li>
               <li class="nav-item <?php echo activeMenuSidebar('add')?'active':false; ?>">
                 <a href="<?php echo _WEB_HOST_ROOT_ADMIN.'?module=category&action=add'; ?>" class="nav-link <?php echo activeMenuSidebar('add')?'active':false; ?>">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Thêm mới</p>
+                  <p>Thêm mới danh mục</p>
                 </a>
               </li>
             </ul>

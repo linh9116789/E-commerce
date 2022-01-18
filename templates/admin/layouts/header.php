@@ -26,11 +26,13 @@
   <!-- summernote -->
   <link rel="stylesheet" href="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/plugins/summernote/summernote-bs4.min.css">
 </head>
+<style>
+  .error{
+    color: red;
+  }
+</style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
-  
-
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
