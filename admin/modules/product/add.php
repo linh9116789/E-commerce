@@ -7,7 +7,7 @@ if (!defined('_INCODE')) die('Access Deined...');
 //Xử lý thêm sản phẩm
 if (isPost()){
     $body = getBody();
-
+    
     $errors=[];//Mảng lưu trữ các lỗi
 
     //Validate tên sản phẩm: Bắt buộc phải nhập
@@ -44,8 +44,8 @@ if (isPost()){
         $price = $body['price'];
         $sale = $body['sale'];
         $qty = $body['quantily'];
+        $slug = $body['slug'];
         $date = date('Y-m-d H:i:s');
-
         $dataInsert = [
             'name'=> $name,
             'category_id' => $category_id,
@@ -55,7 +55,8 @@ if (isPost()){
             'sale' => $sale,
             'quantily' => $qty,
             'create_at' => $date,
-            'thumbnail' => $img
+            'thumbnail' => $img,
+            'slug'=> $slug
         ];
 
         $insertStatus = insert('products', $dataInsert);
@@ -98,8 +99,12 @@ layout('breadcrumb','admin', $data);
             <div class="col-sm-12 col-md-7">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Tên sản phẩm</label>
-                    <input type="text" name="name" class="form-control">
+                    <input type="text" name="name" class="form-control" onkeyup="ChangeToSlug();" id="slug">
                     <?php echo form_error('name', $errors, '<span class="error">', '</span>'); ?>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Slug sản phẩm</label>
+                    <input type="text" name="slug" class="form-control" id="convert_slug">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">--Danh mục---</label>
