@@ -106,8 +106,12 @@ layout('breadcrumb','admin', $data);
             <div class="col-sm-12 col-md-7">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Tên sản phẩm</label>
-                    <input type="text" name="name" value="<?php echo $queryProduct['name'] ?>" class="form-control">
+                    <input type="text" name="name" value="<?php echo $queryProduct['name'] ?>" class="form-control" onkeyup="ChangeToSlug();" id="slug">
                     <?php echo form_error('name', $errors, '<span class="error">', '</span>'); ?>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Slug sản phẩm</label>
+                    <input type="text" name="slug" value="<?php echo $queryProduct['slug'] ?>" class="form-control" id="convert_slug">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">--Danh mục---</label>

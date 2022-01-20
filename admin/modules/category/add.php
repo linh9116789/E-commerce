@@ -18,12 +18,18 @@ if (isPost()){
             $errors['c_name']['min'] = 'Không được nhỏ hơn 2 ký tự';
         }
     }
+
+    if (empty(trim($body['slug']))){
+        $errors['slug']['required'] = 'Không được bỏ trống';
+    }
     
     if (empty($errors)){
         $c_name = $body['c_name'];
+        $slug = $body['slug'];
         $date = date('Y-m-d H:i:s');
         $dataInsert = [
             'c_name' => $c_name,
+            'slug'=>$slug,
             'created_at'=>$date
         ];
 
@@ -56,15 +62,30 @@ layout('breadcrumb','admin', $data);
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-    <?php getMsg($msg, $msgType); ?>
-        <form action="" method="POST">
-            <div class="form-group">
-                <label for="">Tên danh mục</label>
-                <input type="text" class="form-control" name="c_name" id="" placeholder="Tên danh mục">
-                <?php echo form_error('c_name', $errors, '<span class="error">', '</span>'); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary">
+                <?php getMsg($msg, $msgType); ?>
+                <!-- form start -->
+                <form method="POST">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Tên danh mục</label>
+                            <input type="text" class="form-control <?php if(!empty($errors['c_name'])){echo 'is-invalid';}?>" name="c_name" placeholder="Tên danh mục" onkeyup="ChangeToSlug();" id="slug">
+                            <?php echo form_error('c_name', $errors, '<span class="error invalid-feedback">', '</span>'); ?>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Slug danh mục</label>
+                            <input type="text" name="slug" class="form-control <?php if(!empty($errors['slug'])){echo 'is-invalid';}?>" id="convert_slug" placeholder="Slug danh mục">
+                            <?php echo form_error('slug', $errors, '<span class="error invalid-feedback">', '</span>'); ?>
+                        </div>
+                    <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm</button>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary">Thêm mới</button>
-        </form>
+        </div>
+    </div>
     </div><!-- /.container-fluid -->
 </section>
 <!-- /.content -->
