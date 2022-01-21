@@ -12,7 +12,7 @@ $msgType = getFlashData('msg_type');
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-    <?php getMsg($msg, $msgType); ?>
+     <?php getMsg($msg, $msgType); ?>
         <table class="table table-bordered">
             <thead>
                 <tr>

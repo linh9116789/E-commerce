@@ -97,24 +97,6 @@ function activeMenuSidebar($module){
     return false;
 }
 
-//Kiểm tra số nguyên
-function isNumberInt($number, $range=[]){
-    /*
-     * $range = ['min_range'=>1, 'max_range'=>20];
-     *
-     * */
-    if (!empty($range)){
-        $options = ['options'=>$range];
-        $checkNumber = filter_var($number, FILTER_VALIDATE_INT, $options);
-    }else{
-        $checkNumber = filter_var($number, FILTER_VALIDATE_INT);
-    }
-
-    return $checkNumber;
-
-}
-
-
 //Hàm tạo thông báo
 function getMsg($msg, $type='success'){
     if (!empty($msg)){
@@ -188,6 +170,63 @@ function upload_image($file, $folder = '', array $extend = array())
 
     return $data;
 }
+
+
+function upload_image_mutiple($file, $folder = '', array $extend = array())
+{
+    if (!empty($folder)){
+        $folder = '/'.$folder;
+    }
+    $data=[];
+    $code = 1;
+    // lấy đường dẫn ảnh
+    $baseFilename = $_FILES[$file]['name'];
+    foreach ($baseFilename as $key => $item){
+        // thông tin file 
+        $info = new SplFileInfo($item);
+
+        // lấy đuôi mở rộng của file
+        //C1:
+        $ext = strtolower($info->getExtension());
+        //C2:
+        // $ext = strtolower(pathinfo($info->getFilename(), PATHINFO_EXTENSION));
+
+        // Kiểm tra định dạng đuôi
+        if (!$extend){
+            $extend = ['png', 'jpg', 'jpeg'];
+        }
+
+        if (!in_array($ext, $extend)){
+            return $data['code'] = 0;
+        }
+
+        // Tên file mới
+        $nameFile = trim(str_replace('.' . $ext, '', strtolower($info->getFilename())));
+        $filename = date('Y-m-d__') . $nameFile . '.' . $ext;;
+
+        // Thư mục gốc để uploads
+        $path =  _WEB_PATH_TEMPLATE . $folder.'/' . 'uploads/' . date('Y/m/d/');
+        
+        if ($folder)
+            $path = _WEB_PATH_TEMPLATE . $folder . '/' . 'uploads/' . date('Y/m/d/');
+
+        if (!file_exists($path)){
+            mkdir($path, 0777, true);
+        }
+
+        // Di chuyển file vào thư mục uploads
+        move_uploaded_file($_FILES[$file]['tmp_name'][$key], $path . $filename);
+
+        $data[] = [
+            'name'     => $filename,
+            'code'     => $code,
+            'path'     => $path,
+            'path_img' => 'uploads/' . $filename
+        ];
+    }
+    return $data;
+}
+
 
 /**
  * @param $image [tên file trùng tên input]

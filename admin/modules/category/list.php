@@ -1,5 +1,28 @@
 <?php
 
+/**
+ * File này chứa chức năng liệt kê danh sách danh mục
+ */
+
+//Xử lý danh sách sản phẩm và phân trang
+$totalRecodsCategory = countAll("SELECT COUNT(*) FROM categories");
+
+$categoryTotalPage = ceil($totalRecodsCategory / _PER_PAGE);
+
+$page = isset(getBody()['page'])&&is_numeric(getBody()['page']) ? (int)getBody()['page'] : 1;
+
+//Kiểm tra nếu như số page mà lớn hơn số page trong data thì sẽ là page lớn nhất
+//Còn if như page mà <0 thì thì sẽ là page đầu
+if ($page > $categoryTotalPage){
+    $page = $categoryTotalPage;
+}else{
+    if ($page < 0){
+        $page = 1; 
+    }
+}
+$offSet = ($page - 1) * _PER_PAGE;
+$categoryQuery = getRaw("SELECT * FROM categories ORDER BY 'id' ASC LIMIT "._PER_PAGE." OFFSET $offSet ");
+
 $data = [
     'pageTitle' => 'Quản lý danh mục'
 ];
@@ -32,7 +55,6 @@ $msgType = getFlashData('msg_type');
                             <tbody>
                                 <?php
                                     $i= 1;
-                                    $categoryQuery = getRaw("SELECT * FROM categories");
                                     if (is_array($categoryQuery)):
                                     foreach($categoryQuery as $value):
                                 ?>
@@ -54,11 +76,13 @@ $msgType = getFlashData('msg_type');
                     <!-- /.card-body -->
                     <div class="card-footer clearfix">
                         <ul class="pagination pagination-sm m-0 float-right">
-                        <li class="page-item"><a class="page-link" href="#">«</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                            <?php if ($page > 1):?>
+                            <li class="page-item"><a class="page-link" href="?module=category&action=list&page=<?php echo ($page - 1); ?>">«</a></li>
+                            <?php endif;?>
+                            <li class="page-item page-link"><?php echo $page; ?></li>
+                            <?php if ($page * _PER_PAGE < $totalRecodsCategory):?>
+                            <li class="page-item"><a class="page-link" href="?module=category&action=list&page=<?php echo ($page + 1); ?>">»</a></li>
+                            <?php endif;?>
                         </ul>
                     </div>
                 </div>

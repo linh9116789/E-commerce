@@ -9,16 +9,25 @@ if (isPost()){
     $body = getBody();
 
     $errors = []; //Mảng lưu trữ các lỗi
-
-    //Validate mật khẩu: Bắt buộc phải nhập, >=2 ký tự
+    //Lấy dữ liệu từ database check xem đã tồn tại chưa
+    $queryCategory = firstRaw("SELECT c_name FROM categories WHERE c_name='$body[c_name]'");
+    if (!empty($queryCategory)){
+        $nameCategory = $queryCategory['c_name'];
+    }
+    //Validate tên danh mục: Bắt buộc phải nhập, >=2 ký tự
     if (empty(trim($body['c_name']))){
         $errors['c_name']['required'] = 'Không được bỏ trống';
     }else{
         if (strlen(trim($body['c_name']))<2){
             $errors['c_name']['min'] = 'Không được nhỏ hơn 2 ký tự';
+        }else{
+            if (trim($body['c_name'])==$nameCategory){
+                $errors['c_name']['min'] = 'Tên danh mục ' . $body['c_name'] . ' đã tồn tại';
+            }
         }
     }
 
+    //Validate slug danh mục và kiểm tra xem đã tồn tại chưa: Bắt buộc phải nhập, >=2 ký tự
     if (empty(trim($body['slug']))){
         $errors['slug']['required'] = 'Không được bỏ trống';
     }

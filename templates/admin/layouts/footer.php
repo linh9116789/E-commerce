@@ -49,12 +49,16 @@
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/pages/dashboard.js"></script>
-<!-- Admin Ckeditor-->
+<!-- Auto Format Currency (Money) With jQuery -->
+<script src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/js/easy-number-separator.js"></script>
+
+<!-- Ckeditor-->
 <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
 <script>
   CKEDITOR.replace( 'editor1');
 </script>
-<!-- Admin load thumbail before load image-->
+
+<!--load thumbail before load image-->
 <script>
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -70,7 +74,20 @@
     readURL(this);
     });
 </script>
-<!-- Admin convert slug-->
+
+<!--load mutilple image before load image-->
+<script>
+  $(document).ready(function(){
+    $('#image').change(function(){
+        $("#frames").html('');
+        for (var i = 0; i < $(this)[0].files.length; i++) {
+            $("#frames").append('<div class="col-sm-4"><img src="'+window.URL.createObjectURL(this.files[i])+'"style="max-height:88px;width:140px;margin-bottom:5px;border: 1px solid #858796;"/></div>');
+        }
+    });
+  });
+</script>
+
+<!-- Convert slug-->
 <script>
 function ChangeToSlug(){
     var slug;
@@ -102,6 +119,14 @@ function ChangeToSlug(){
         //In slug ra textbox có id “slug”
     document.getElementById('convert_slug').value = slug;
 }
+</script>
+<script>
+    $('input.CurrencyInput').on('blur', function() {
+  const value = this.value.replace(/,/g, '');
+  this.value = parseFloat(value).toLocaleString('vi-VN', {
+    style: 'decimal'
+  });
+});
 </script>
 </body>
 </html>

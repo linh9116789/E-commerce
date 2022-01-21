@@ -86,3 +86,21 @@ function firstRaw($sql){
 
     return false;
 }
+
+//Lấy dữ liệu từ câu lệnh SQL - Lấy ra tổng số dòng
+function countAll($sql){
+    $statement = query($sql, [], true);
+    $count = $statement->fetchColumn();
+    return $count;
+}
+
+//Lấy dữ liệu từ câu lệnh SQL - Lấy ra id vừa thêm vào luôn
+function lastId($table,$dataInsert){
+    global $conn;
+    $statement = insert($table, $dataInsert);
+    if ($statement){
+        $lastId = $conn->lastInsertId();
+        return $lastId;
+    }
+    return false;
+}
