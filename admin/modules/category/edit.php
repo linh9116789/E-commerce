@@ -4,11 +4,12 @@ if (!defined('_INCODE')) die('Access Deined...');
  * File này chứa chức năng sửa danh mục 
  */
 //Xử lý lấy id trên url danh mục 
-$idCategory = getBody()['id'];
+    $idCategory =  isset($_GET['id'])?(int)($_GET['id']):'';
+
 
 if (!empty($idCategory)){
     $queryCategory = firstRaw("SELECT * FROM categories WHERE id='$idCategory'");
-    if (!empty($queryCategory) && $queryCategory['id']==$idCategory){
+    if (!empty($queryCategory)){
         $nameCategory = $queryCategory['c_name'];
         $slugCategory = $queryCategory['slug'];
     }else{
@@ -45,7 +46,7 @@ if (!empty($idCategory)){
                 'updated_at'=>$date
             ];
 
-            $updateStatus = update('categories', $dataUpdate, 'id = '.$idCategory.'');
+            $updateStatus = update('categories', $dataUpdate, "id=$idCategory");
 
             if ($updateStatus){
                 setFlashData('msg','Thêm danh mục thành công!');
@@ -85,7 +86,7 @@ layout('breadcrumb','admin', $data);
             <div class="card card-primary">
                 <?php getMsg($msg, $msgType); ?>
                 <!-- form start -->
-                <form method="POST">
+                <form action="" method="POST">
                     <div class="card-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tên danh mục</label>

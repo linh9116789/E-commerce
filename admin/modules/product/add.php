@@ -73,7 +73,6 @@ if (isPost()){
         if (count($mutipleImage) > 4){
             $errors['mutipleImage']['min'] = 'Tối đa là 3 hình';
         }
-        
     }
 
     
@@ -167,7 +166,7 @@ layout('breadcrumb','admin', $data);
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">--Danh mục---</label>
-                                        <select name="category_id" class="form-control <?php if(!empty($errors['category_id'])){echo 'is-invalid';}?> custom-select">
+                                        <select name="category_id" class="form-control <?php if(!empty($errors['category_id'])){echo 'is-invalid';}?>">
                                             <option selected="" disabled="">Chọn danh mục</option>
                                             <?php 
                                                 $queryCategory = getRaw('SELECT id,c_name FROM categories');
@@ -214,7 +213,7 @@ layout('breadcrumb','admin', $data);
                                         </div>
                                     </div>
                                     <div class="form-group col-md-7">
-                                        <img src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/uploads/defaultimg.jpg?>" style="border: 1px solid #858796; max-height:200px"  id="blah" alt="">
+                                        <img src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/uploads/defaultimg.jpg" style="border: 1px solid #858796; max-height:200px"  id="blah" alt="">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Hình ảnh đại diện</label>

@@ -4,12 +4,25 @@ if (!defined('_INCODE')) die('Access Deined...');
  * File này chứa chức năng sửa sản phầm
  */
 
-//Lấy id của sản phẩm
-$idProduct = getBody()['id'];
+//Xử lý lấy id trên url sản phẩm
+
+
+$idProduct =  isset($_GET['id'])?(int)($_GET['id']):'';
 
 if (!empty($idProduct)){
     $queryProduct = firstRaw("SELECT * FROM products WHERE id='$idProduct'");
-    if (empty($queryProduct) && $queryProduct['id']!=$idProduct){
+    if(!empty($queryProduct) && $queryProduct['id'] == $idProduct){
+        $nameProduct = $queryProduct['name'];
+        $slugProduct = $queryProduct['slug'];
+        $idCategory  = ($queryProduct['category_id']);
+        $titleProduct= $queryProduct['title'];
+        $descriptionProduct = $queryProduct['description'];
+        $priceProduct =$queryProduct['price'];
+        $saleProduct = $queryProduct['sale'];
+        $qtyProduct =$queryProduct['quantily'];
+        $thumbnailProduct = $queryProduct['thumbnail'];
+
+    }else{
         setFlashData('msg', 'Đường dẫn hoặc sản phẩm không còn tồn tại');
         setFlashData('msg_type', 'danger');
         redirect('?module=product&action=list');
@@ -37,17 +50,28 @@ if (!empty($idProduct)){
             $errors['description']['required'] = 'Không được bỏ trống';
         }
 
-        //Upload image
-        $img = upload_image('thumbnail','admin');
-        
-        if ($img['code']==0){
-            $errors['thumbnail']['required'] = 'Không được bỏ trống hoặc cho phép (png, jpg, jpeg)';
-        }else{
-            if ($img['code']==1){
-                $img = $img['name'];
-            }
+        //Validate giá sản phẩm: Bắt buộc phải nhập
+        if(empty(trim($body['price']))){
+            $errors['price']['required'] = 'Không được bỏ trống';
         }
 
+        //Upload image kiểm tra xem ảnh có sửa đổi không nếu không lấy ảnh cũ còn ảnh mới thì check
+        $img = upload_image('thumbnail','admin');
+        
+        if ($img==0){
+            $errors['thumbnail']['required'] = 'PNG,...';
+        }else{
+            $img = $img['name'];
+        }
+        
+
+        //Upload image mutiple và validate image bắt buộc ảnh hoặc chỉ cho phép đuôi mở rộng png, jpg, jpeg
+        // $mutipleImage = upload_image_mutiple('mutipleImage','admin');
+        // if (is_array($mutipleImage)){
+        //     if (count($mutipleImage) > 4){
+        //         $errors['mutipleImage']['min'] = 'Tối đa là 3 hình';
+        //     }
+        // }
         if (empty($errors)){
             $name = $body['name'];
             $category_id = $body['category_id'];
@@ -70,7 +94,7 @@ if (!empty($idProduct)){
                 'thumbnail' => $img
             ];
 
-            $insertStatus = update('products', $dataInsert, "id=$productId");
+            $insertStatus = update('products', $dataInsert, 'id = '.$idProduct.'');
             
             if ($insertStatus){
                 setFlashData('msg','Sửa sản phẩm thành công!');
@@ -120,12 +144,12 @@ layout('breadcrumb','admin', $data);
                                 <div class="col-md-7">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Tên sản phẩm</label>
-                                        <input type="text" name="name" class="form-control <?php if(!empty($errors['name'])){echo 'is-invalid';}?>" onkeyup="ChangeToSlug();" id="slug">
+                                        <input type="text" name="name" value="<?php echo $nameProduct; ?>" class="form-control <?php if(!empty($errors['name'])){echo 'is-invalid';}?>" onkeyup="ChangeToSlug();" id="slug">
                                         <?php echo form_error('name', $errors, '<span class="error">', '</span>'); ?>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Slug sản phẩm</label>
-                                        <input type="text" name="slug" class="form-control <?php if(!empty($errors['slug'])){echo 'is-invalid';}?>" id="convert_slug">
+                                        <input type="text" name="slug" value="<?php echo $slugProduct; ?>" class="form-control <?php if(!empty($errors['slug'])){echo 'is-invalid';}?>" id="convert_slug">
                                         <?php echo form_error('slug', $errors, '<span class="error">', '</span>'); ?>
                                     </div>
                                     <div class="form-group">
@@ -133,11 +157,11 @@ layout('breadcrumb','admin', $data);
                                         <select name="category_id" class="form-control <?php if(!empty($errors['category_id'])){echo 'is-invalid';}?> custom-select">
                                             <option selected="" disabled="">Chọn danh mục</option>
                                             <?php 
-                                                $queryCategory = getRaw('SELECT id,c_name FROM categories');
+                                                $queryCategory = getRaw("SELECT id,c_name FROM categories");
                                                 if (is_array($queryCategory)):
-                                                foreach($queryCategory as $key):    
+                                                foreach($queryCategory as $value):    
                                             ?>
-                                            <option value="<?php echo $key['id']; ?>"><?php echo $key['c_name']; ?></option>
+                                            <option <?php if($value['id'] == $idCategory ){echo "selected";} ?> value="<?php echo $value['id'] ?>"><?php echo $value['c_name'] ?></option>
                                             <?php endforeach; endif;?>
                                         </select>
                                         <?php echo form_error('category_id', $errors, '<span class="error">', '</span>'); ?>
@@ -145,19 +169,19 @@ layout('breadcrumb','admin', $data);
                                     
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Tiêu đề sản phẩm</label>
-                                        <input type="text" name="title" class="form-control <?php if(!empty($errors['title'])){echo 'is-invalid';}?>">
+                                        <input type="text" name="title" value="<?php echo $titleProduct; ?>" class="form-control <?php if(!empty($errors['title'])){echo 'is-invalid';}?>">
                                         <?php echo form_error('title', $errors, '<span class="error">', '</span>'); ?>                           
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mô tả sản phẩm</label>
-                                        <textarea name="description" id="editor1" cols="30" rows="10"></textarea>
+                                        <textarea name="description" id="editor1" cols="30" rows="10"><?php echo $descriptionProduct; ?></textarea>
                                         <?php echo form_error('description', $errors, '<span class="error">', '</span>'); ?>                           
                                     </div>
                                 </div>
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Giá sản phẩm(VNĐ)</label>
-                                        <input name="price" class="form-control <?php if(!empty($errors['price'])){echo 'is-invalid';}?> number-separator">
+                                        <input name="price" value="<?php echo number_format($priceProduct); ?>" class="form-control <?php if(!empty($errors['price'])){echo 'is-invalid';}?> number-separator">
                                         <?php echo form_error('price', $errors, '<span class="error">', '</span>'); ?>                                   
                                     </div>
                                     <div class="form-group">
@@ -165,36 +189,35 @@ layout('breadcrumb','admin', $data);
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">Giảm giá(%)</label>
-                                                    <input type="number" name="sale" min='0' class="form-control" value="0">
+                                                    <input type="number" name="sale" min='0' class="form-control" value="<?php echo $saleProduct; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">Số lượng</label>
-                                                    <input type="number" name="quantily" class="form-control" min='1' value="0">
+                                                    <input type="number" name="quantily" class="form-control" min='1' value="<?php echo $qtyProduct; ?>">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-7">
-                                        <img src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/uploads/defaultimg.jpg?>" style="border: 1px solid #858796; max-height:200px"  id="blah" alt="">
+                                        <img src="<?php echo pare_url_file($thumbnailProduct,'admin');?>" style="border: 1px solid #858796; height:200px"  id="blah" alt="">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Hình ảnh đại diện</label>
-                                        <input type="file" id="imgInp"  name="thumbnail" class="form-control <?php if(!empty($errors['price'])){echo 'is-invalid';}?>">
+                                        <input type="file" id="imgInp"  name="thumbnail" class="form-control <?php if(!empty($errors['thumbnail'])){echo 'is-invalid';}?>">
                                         <?php echo form_error('thumbnail', $errors, '<span class="error">', '</span>'); ?>
                                     </div>
                                     <div class="form-group">
                                         <div class="row" id="frames">
+                                            <?php $queryImageProduct = getRaw("SELECT * FROM product_images WHERE product_id ='$idProduct'");
+                                                if (is_array($queryImageProduct)):
+                                                    foreach ($queryImageProduct as $item):
+                                            ?>
                                             <div class="col-sm-4">
-                                                <img src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/uploads/defaultimg.jpg?>" style="border: 1px solid #858796;max-height:88px"   alt="">
+                                                <img src="<?php echo pare_url_file($item['image'],'admin'); ?>" style="max-height:88px;width:140px;margin-bottom:5px;border: 1px solid #858796;">
                                             </div>
-                                            <div class="col-sm-4">
-                                                <img src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/uploads/defaultimg.jpg?>" style="border: 1px solid #858796;max-height:88px"   alt="">
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <img src="<?php echo _WEB_HOST_ADMIN_TEMPLATE ?>/assets/uploads/defaultimg.jpg?>" style="border: 1px solid #858796;max-height:88px"   alt="">
-                                            </div>
+                                            <?php endforeach; endif;?>
                                         </div>
                                     </div>
                                     <div class="form-group">

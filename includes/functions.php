@@ -126,6 +126,10 @@ function upload_image($file, $folder = '', array $extend = array())
     // lấy đường dẫn ảnh
     $baseFilename = $_FILES[$file]['name'];
 
+    //Nếu chuỗi rỗng thì trả về rỗng
+    if(empty($baseFilename)){
+        return $data['name'] ='';
+    }
     // thông tin file 
     $info = new SplFileInfo($baseFilename);
 
